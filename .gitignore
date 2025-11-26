@@ -1,0 +1,17 @@
+.DS_Store
+.idea/
+.vscode/
+node_modules/
+dist/
+.env
+.env.local
+.env.production
+.env.development
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+out/
+*/iml/
+*.log
+*.iml
