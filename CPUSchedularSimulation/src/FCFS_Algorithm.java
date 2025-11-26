@@ -20,7 +20,7 @@ public class FCFS_Algorithm {
         // StringBuilder to construct the Gantt Chart string
         StringBuilder ganttChart = new StringBuilder("|");
 
-        System.out.printf("%-10s %-18s %-15s\n", "Process ID", "Arrival Time", "Burst Time");
+        System.out.printf("%-12s %-24s %-15s\n", "Process ID", "Arrival Time", "Burst Time");
         System.out.println("----------------------------------------------");
         for(Process p : processes) {
             System.out.println(p);
@@ -30,7 +30,6 @@ public class FCFS_Algorithm {
         for (Process p : processes) {
             // Check for Idle Time
             if (currentTime < p.arrivalTime) {
-                // If there is a gap, you could add an idle block here
                 currentTime = p.arrivalTime;
             }
 
@@ -40,25 +39,14 @@ public class FCFS_Algorithm {
             p.waitingTime = p.startTime - p.arrivalTime;
 
             // --- GANTT CHART GENERATION ---
-            // OPTION 1: Inclusive Indexing (Matches your slide IMG_5988)
-            // Example: Start 0, Burst 6 -> Shows (0-5)
-            // Logic: (Start) - (End - 1)
+            // OPTION 1: Inclusive Indexing (e.g. 0-5 for burst 6)
             ganttChart.append(" ")
                     .append(p.id)
                     .append("(")
                     .append(p.startTime)
                     .append("-")
-                    .append(p.completionTime - 1) // Subtract 1 for inclusive display
+                    .append(p.completionTime - 1)
                     .append(")|");
-
-            /* // OPTION 2: Simple Burst Display (Matches hand-drawing style)
-            // Example: P1(6) where 6 is the burst time
-            ganttChart.append(" ")
-                      .append(p.id)
-                      .append("(")
-                      .append(p.burstTime)
-                      .append(")|");
-            */
 
             // Update global time
             currentTime = p.completionTime;

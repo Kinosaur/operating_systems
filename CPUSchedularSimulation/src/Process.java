@@ -17,6 +17,6 @@ public class Process {
 
     @Override
     public String toString() {
-        return String.format("%-12s %-18d %-15d", id, arrivalTime, burstTime);
+        return String.format("%-12s %-24d %-15d", id, arrivalTime, burstTime);
     }
 }
