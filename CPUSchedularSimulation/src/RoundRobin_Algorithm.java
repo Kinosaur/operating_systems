@@ -69,7 +69,6 @@ public class RoundRobin_Algorithm {
                 }
             }
 
-            // --- FIX FOR NULL POINTER EXCEPTION ---
             // Even with the fast-forward logic, strictly check if queue is empty before polling
             if (readyQueue.isEmpty()) {
                 continue;

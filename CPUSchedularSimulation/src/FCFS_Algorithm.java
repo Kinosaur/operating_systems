@@ -39,7 +39,7 @@ public class FCFS_Algorithm {
             p.waitingTime = p.startTime - p.arrivalTime;
 
             // --- GANTT CHART GENERATION ---
-            // OPTION 1: Inclusive Indexing (e.g. 0-5 for burst 6)
+            // Inclusive Indexing (e.g. 0-5 for burst 6)
             ganttChart.append(" ")
                     .append(p.id)
                     .append("(")

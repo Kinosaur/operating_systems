@@ -38,12 +38,12 @@ public class CPUSchedulerMenu {
             // STEP 4: Session Loop Logic (Redo / New Data)
             System.out.print("\nDo you want to run another simulation? (y/n): ");
             String continueChoice = scanner.next().trim().toLowerCase();
-            scanner.nextLine(); // Consume newline
+            scanner.nextLine();
 
             if (continueChoice.equals("y")) {
                 System.out.print("Do you want to use the same process data? (y/n): ");
                 String keepDataChoice = scanner.next().trim().toLowerCase();
-                scanner.nextLine(); // Consume newline
+                scanner.nextLine();
 
                 if (keepDataChoice.equals("n")) {
                     processList.clear(); // Clearing list forces Step 1 to run again
@@ -70,7 +70,7 @@ public class CPUSchedulerMenu {
             if (scanner.hasNextInt()) {
                 num = scanner.nextInt();
                 if (num >= 1 && num <= 6) {
-                    scanner.nextLine(); // Consume newline
+                    scanner.nextLine();
                     break;
                 } else {
                     System.out.println("Error: Please enter a number between 1 and 6.");
@@ -113,7 +113,7 @@ public class CPUSchedulerMenu {
             }
             list.add(new Process("P" + i, arrival, burst));
         }
-        scanner.nextLine(); // Consume newline
+        scanner.nextLine();
     }
 
     private static void printProcessTable(ArrayList<Process> list) {
@@ -138,7 +138,7 @@ public class CPUSchedulerMenu {
         if (scanner.hasNextInt()) {
             choice = scanner.nextInt();
         }
-        scanner.nextLine(); // Consume newline after int input
+        scanner.nextLine();
 
         switch (choice) {
             case 1:
@@ -156,9 +156,8 @@ public class CPUSchedulerMenu {
                         scanner.next();
                     }
                 }
-                scanner.nextLine(); // Consume newline
+                scanner.nextLine();
 
-                // Now correctly calling the Round Robin file
                 RoundRobin_Algorithm.runSimulation(processList, timeQuantum);
                 break;
             case 3:
