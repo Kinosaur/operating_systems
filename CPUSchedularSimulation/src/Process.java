@@ -3,7 +3,6 @@ public class Process {
     int arrivalTime;
     int burstTime;
 
-    // We will add these to store results later
     int startTime;
     int completionTime;
     int waitingTime;

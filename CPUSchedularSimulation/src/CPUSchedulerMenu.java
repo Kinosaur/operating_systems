@@ -38,12 +38,12 @@ public class CPUSchedulerMenu {
             // STEP 4: Session Loop Logic (Redo / New Data)
             System.out.print("\nDo you want to run another simulation? (y/n): ");
             String continueChoice = scanner.next().trim().toLowerCase();
-            scanner.nextLine();
+            scanner.nextLine(); // Consume newline
 
             if (continueChoice.equals("y")) {
                 System.out.print("Do you want to use the same process data? (y/n): ");
                 String keepDataChoice = scanner.next().trim().toLowerCase();
-                scanner.nextLine();
+                scanner.nextLine(); // Consume newline
 
                 if (keepDataChoice.equals("n")) {
                     processList.clear(); // Clearing list forces Step 1 to run again
@@ -70,14 +70,14 @@ public class CPUSchedulerMenu {
             if (scanner.hasNextInt()) {
                 num = scanner.nextInt();
                 if (num >= 1 && num <= 6) {
-                    scanner.nextLine();
+                    scanner.nextLine(); // Consume newline
                     break;
                 } else {
                     System.out.println("Error: Please enter a number between 1 and 6.");
                 }
             } else {
                 System.out.println("Error: Invalid input. Please enter an integer.");
-                scanner.next();
+                scanner.next(); // Clear invalid input
             }
         }
         return num;
@@ -87,8 +87,8 @@ public class CPUSchedulerMenu {
         Random rand = new Random();
         System.out.println("\n> Generating random data...");
         for (int i = 1; i <= n; i++) {
-            int arrival = rand.nextInt(11);
-            int burst = rand.nextInt(20) + 1;
+            int arrival = rand.nextInt(11);      // 0 to 10
+            int burst = rand.nextInt(20) + 1;    // 1 to 20
             list.add(new Process("P" + i, arrival, burst));
         }
     }
@@ -113,7 +113,7 @@ public class CPUSchedulerMenu {
             }
             list.add(new Process("P" + i, arrival, burst));
         }
-        scanner.nextLine();
+        scanner.nextLine(); // Consume newline
     }
 
     private static void printProcessTable(ArrayList<Process> list) {
@@ -138,7 +138,7 @@ public class CPUSchedulerMenu {
         if (scanner.hasNextInt()) {
             choice = scanner.nextInt();
         }
-        scanner.nextLine();
+        scanner.nextLine(); // Consume newline after int input
 
         switch (choice) {
             case 1:
@@ -147,12 +147,19 @@ public class CPUSchedulerMenu {
             case 2:
                 System.out.print("\n[System] Enter Time Quantum for Round Robin: ");
                 int timeQuantum = 0;
-                if(scanner.hasNextInt()) timeQuantum = scanner.nextInt();
-                scanner.nextLine();
+                while(timeQuantum <= 0) {
+                    if(scanner.hasNextInt()) {
+                        timeQuantum = scanner.nextInt();
+                        if (timeQuantum <= 0) System.out.print("Invalid TQ. Enter > 0: ");
+                    } else {
+                        System.out.print("Invalid Input. Enter integer > 0: ");
+                        scanner.next();
+                    }
+                }
+                scanner.nextLine(); // Consume newline
 
-                // We will link the Round Robin file here later
-                // RoundRobin_Algorithm.runSimulation(processList, timeQuantum);
-                System.out.println("[System] Running Round Robin (TQ=" + timeQuantum + ")... (Logic not yet linked)");
+                // Now correctly calling the Round Robin file
+                RoundRobin_Algorithm.runSimulation(processList, timeQuantum);
                 break;
             case 3:
                 System.out.println("Exiting program.");
