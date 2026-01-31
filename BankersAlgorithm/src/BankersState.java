@@ -1,3 +1,7 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class BankersState {
     int numProcesses; // n
     int numResources; // m
@@ -15,7 +19,6 @@ public class BankersState {
         this.numProcesses = n;
         this.numResources = m;
 
-        // Initialize arrays
         maxMatrix = new int[n][m];
         allocationMatrix = new int[n][m];
         needMatrix = new int[n][m];
@@ -23,7 +26,7 @@ public class BankersState {
         totalResourcesVector = new int[m];
     }
 
-    // --- Core Logic ---
+    // --- Core Calculations ---
 
     public void calculateNeed() {
         for (int i = 0; i < numProcesses; i++) {
@@ -36,16 +39,119 @@ public class BankersState {
     public void calculateAvailable() {
         int[] totalAllocated = new int[numResources];
 
-        // 1. Sum up currently allocated resources
+        // Sum currently allocated resources
         for (int j = 0; j < numResources; j++) {
             for (int i = 0; i < numProcesses; i++) {
                 totalAllocated[j] += allocationMatrix[i][j];
             }
         }
 
-        // 2. Available = Total System Resources - Total Allocated
+        // Available = Total System Resources - Total Allocated
         for (int j = 0; j < numResources; j++) {
             availableVector[j] = totalResourcesVector[j] - totalAllocated[j];
         }
+    }
+
+    // --- Safety Algorithm (Iteration Logic) ---
+
+    public void runSafetyAlgorithm() {
+        System.out.println("--------------------------------------------------");
+        System.out.println("       Safety Algorithm Iteration Trace           ");
+        System.out.println("--------------------------------------------------");
+
+        int[] work = Arrays.copyOf(availableVector, numResources);
+        boolean[] finish = new boolean[numProcesses];
+        List<Integer> safeSequence = new ArrayList<>();
+        int completedCount = 0;
+
+        while (completedCount < numProcesses) {
+
+            // 1. Prepare Display Data: Create a view of Need Matrix where finished rows are 0
+            int[][] displayNeed = new int[numProcesses][numResources];
+            for (int i = 0; i < numProcesses; i++) {
+                if (finish[i]) {
+                    Arrays.fill(displayNeed[i], 0); // Replace finished process values with 0
+                } else {
+                    displayNeed[i] = Arrays.copyOf(needMatrix[i], numResources);
+                }
+            }
+
+            // 2. Print System State for this Iteration
+            System.out.println("\n[ Iteration " + (completedCount + 1) + " ]");
+
+            System.out.println("Current Available Vector (Work):");
+            DisplayManager.printResourceVector(work);
+
+            System.out.println("Current Need Matrix (Completed processes shown as 0):");
+            DisplayManager.printTable(displayNeed, numProcesses, numResources);
+
+            // 3. Find a candidate process
+            boolean foundInThisPass = false;
+
+            System.out.println(">> Scanning for executable process...");
+
+            for (int i = 0; i < numProcesses; i++) {
+                if (!finish[i]) {
+                    // Check logic
+                    if (checkNeedLessThanWork(i, work)) {
+                        System.out.println("   -> MATCH FOUND: Process P" + i);
+                        System.out.println("      Need " + vectorToString(needMatrix[i]) + " <= Work " + vectorToString(work));
+
+                        // Execute Process
+                        System.out.println("      P" + i + " runs, finishes, and releases resources.");
+                        for (int k = 0; k < numResources; k++) {
+                            work[k] += allocationMatrix[i][k];
+                        }
+
+                        finish[i] = true;
+                        safeSequence.add(i);
+                        completedCount++;
+                        foundInThisPass = true;
+
+                        System.out.println("      New Available Vector: " + vectorToString(work));
+                        // Break to restart scan (First-Fit Strategy) and show updated matrix next iteration
+                        break;
+                    }
+                }
+            }
+
+            if (!foundInThisPass) {
+                System.out.println("\n>> No matching process found in this iteration. Deadlock detected.");
+                break;
+            }
+        }
+
+        // --- Final Result ---
+        System.out.println("\n--------------------------------------------------");
+        if (completedCount == numProcesses) {
+            System.out.println("The resource allocation has been completed within " + completedCount + " iterations!");
+            System.out.print("The Safe-state order: < ");
+            for (int i = 0; i < safeSequence.size(); i++) {
+                System.out.print("P" + safeSequence.get(i) + (i < safeSequence.size()-1 ? ", " : " "));
+            }
+            System.out.println(">");
+        } else {
+            System.out.println("Resource allocation is failed after " + completedCount + " iterations!");
+            System.out.println("System is in an UNSAFE state.");
+        }
+        System.out.println("--------------------------------------------------");
+    }
+
+    private boolean checkNeedLessThanWork(int pIndex, int[] work) {
+        for (int j = 0; j < numResources; j++) {
+            if (needMatrix[pIndex][j] > work[j]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private String vectorToString(int[] vec) {
+        StringBuilder sb = new StringBuilder("[");
+        for (int i = 0; i < vec.length; i++) {
+            sb.append(vec[i]).append(i < vec.length - 1 ? ", " : "");
+        }
+        sb.append("]");
+        return sb.toString();
     }
 }

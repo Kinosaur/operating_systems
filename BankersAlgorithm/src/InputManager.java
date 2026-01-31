@@ -7,6 +7,7 @@ public class InputManager {
 
     public static boolean loadFromFile(String filename, BankersState state) {
         File file = new File(filename);
+        System.out.println(">> Looking for file at: " + file.getAbsolutePath());
 
         try (Scanner fileScanner = new Scanner(file)) {
             // Block 1: Read Max Matrix
@@ -37,6 +38,9 @@ public class InputManager {
         } catch (FileNotFoundException e) {
             System.err.println("\n[ERROR] File not found: " + filename);
             return false;
+        } catch (Exception e) {
+            System.err.println("\n[ERROR] Error reading file: " + e.getMessage());
+            return false;
         }
     }
 
@@ -44,16 +48,13 @@ public class InputManager {
         Random rand = new Random();
         System.out.println("\n>> Generating random simulation data...");
 
-        // Generate Total Resources
         for (int j = 0; j < state.numResources; j++) {
             state.totalResourcesVector[j] = rand.nextInt(10) + 10;
         }
 
         for (int i = 0; i < state.numProcesses; i++) {
             for (int j = 0; j < state.numResources; j++) {
-                // Max demand <= Total Resources
                 state.maxMatrix[i][j] = rand.nextInt(state.totalResourcesVector[j] / 2);
-                // Allocation <= Max
                 state.allocationMatrix[i][j] = rand.nextInt(state.maxMatrix[i][j] + 1);
             }
         }
