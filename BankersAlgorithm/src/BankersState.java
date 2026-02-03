@@ -56,7 +56,7 @@ public class BankersState {
 
     public void runSafetyAlgorithm() {
         System.out.println("--------------------------------------------------");
-        System.out.println("       Safety Algorithm Iteration Trace           ");
+        System.out.println("       Safety Algorithm Iteration Start           ");
         System.out.println("--------------------------------------------------");
 
         int[] work = Arrays.copyOf(availableVector, numResources);
@@ -66,13 +66,19 @@ public class BankersState {
 
         while (completedCount < numProcesses) {
 
-            // 1. Prepare Display Data: Create a view of Need Matrix where finished rows are 0
+            // 1. Prepare Display Data (Zeroing out finished rows)
             int[][] displayNeed = new int[numProcesses][numResources];
+            int[][] displayAllocation = new int[numProcesses][numResources];
+
             for (int i = 0; i < numProcesses; i++) {
                 if (finish[i]) {
-                    Arrays.fill(displayNeed[i], 0); // Replace finished process values with 0
+                    // If process is done, show 0s for visual clarity
+                    Arrays.fill(displayNeed[i], 0);
+                    Arrays.fill(displayAllocation[i], 0);
                 } else {
+                    // Otherwise, show actual values
                     displayNeed[i] = Arrays.copyOf(needMatrix[i], numResources);
+                    displayAllocation[i] = Arrays.copyOf(allocationMatrix[i], numResources);
                 }
             }
 
@@ -82,23 +88,31 @@ public class BankersState {
             System.out.println("Current Available Vector (Work):");
             DisplayManager.printResourceVector(work);
 
-            System.out.println("Current Need Matrix (Completed processes shown as 0):");
+            System.out.println("(Completed processes shown as 0)\n");
+
+            System.out.println("Current Allocation Matrix:");
+            DisplayManager.printTable(displayAllocation, numProcesses, numResources);
+
+            System.out.println("\n");
+
+            System.out.println("Current Need Matrix:");
             DisplayManager.printTable(displayNeed, numProcesses, numResources);
 
             // 3. Find a candidate process
             boolean foundInThisPass = false;
 
-            System.out.println(">> Scanning for executable process...");
+            // System.out.println(">> Scanning for executable process...");
 
             for (int i = 0; i < numProcesses; i++) {
                 if (!finish[i]) {
                     // Check logic
                     if (checkNeedLessThanWork(i, work)) {
+                        // --- MATCH FOUND BLOCK ---
                         System.out.println("   -> MATCH FOUND: Process P" + i);
                         System.out.println("      Need " + vectorToString(needMatrix[i]) + " <= Work " + vectorToString(work));
 
                         // Execute Process
-                        System.out.println("      P" + i + " runs, finishes, and releases resources.");
+                        // System.out.println("      P" + i + " runs, finishes, and releases resources.");
                         for (int k = 0; k < numResources; k++) {
                             work[k] += allocationMatrix[i][k];
                         }
@@ -109,7 +123,8 @@ public class BankersState {
                         foundInThisPass = true;
 
                         System.out.println("      New Available Vector: " + vectorToString(work));
-                        // Break to restart scan (First-Fit Strategy) and show updated matrix next iteration
+
+                        // Break to restart scan from P0 (First-Fit Strategy)
                         break;
                     }
                 }
@@ -122,7 +137,7 @@ public class BankersState {
         }
 
         // --- Final Result ---
-        System.out.println("\n--------------------------------------------------");
+        System.out.println("\n");
         if (completedCount == numProcesses) {
             System.out.println("The resource allocation has been completed within " + completedCount + " iterations!");
             System.out.print("The Safe-state order: < ");
@@ -134,7 +149,6 @@ public class BankersState {
             System.out.println("Resource allocation is failed after " + completedCount + " iterations!");
             System.out.println("System is in an UNSAFE state.");
         }
-        System.out.println("--------------------------------------------------");
     }
 
     private boolean checkNeedLessThanWork(int pIndex, int[] work) {

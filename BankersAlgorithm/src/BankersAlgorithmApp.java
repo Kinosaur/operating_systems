@@ -2,7 +2,7 @@ import java.util.Scanner;
 
 public class BankersAlgorithmApp {
 
-    static final String INPUT_FILENAME = "input2.txt";
+    static final String INPUT_FILENAME = "input1.txt";
 
     public static void main(String[] args) {
         Scanner console = new Scanner(System.in);
@@ -54,7 +54,7 @@ public class BankersAlgorithmApp {
 
         } while (continueChoice.equalsIgnoreCase("Y"));
 
-        System.out.println("System Exited.");
+        System.out.println("System Exited. Bye!!");
         console.close();
     }
 
