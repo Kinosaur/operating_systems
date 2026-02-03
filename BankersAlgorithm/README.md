@@ -2,7 +2,7 @@
 
 This project is a small Java application created for an **Operating Systems course (Deadlock lecture)**. It demonstrates how **Banker’s Algorithm** works for detecting safe and unsafe states in a system with multiple processes and resource types.
 
-The goal of the project is educational: to make the algorithm visible, traceable, and understandable rather than optimized or over‑engineered.
+The goal of the project is educational: to make the algorithm visible, traceable, and understandable.
 
 ---
 
@@ -23,7 +23,7 @@ This directly maps to the deadlock avoidance concepts taught in OS theory.
 
 ---
 
-## 🧠 Core Concept Refresher (Very Brief)
+## 🧠 Core Concept Brief
 
 Banker’s Algorithm avoids deadlock by **only granting resource requests that keep the system in a safe state**. A state is safe if there exists *some order* in which all processes can complete without running out of resources.
 
