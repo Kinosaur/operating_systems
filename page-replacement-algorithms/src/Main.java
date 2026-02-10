@@ -3,51 +3,75 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+        boolean running = true;
 
-        System.out.println("PAGE REPLACEMENT ALGORITHMS SIMULATION");
-        System.out.println("========================================");
+        while (running) {
+            System.out.println("PAGE REPLACEMENT ALGORITHMS SIMULATION");
+            System.out.println("========================================");
 
-        // 1. Get Page Reference String
-        System.out.print("Enter a Page Reference string without space <Max 20>: ");
-        String refStringInput = scanner.nextLine();
-        // Validation could be added here for Max 20
+            // 1. Get Inputs
+            System.out.print("Enter a Page Reference string without space <Max 20>: ");
+            String refString = scanner.next();
 
-        // 2. Get Memory Frame Size
-        System.out.print("Enter the size of Memory Frame <Max 10>: ");
-        int frameSize = scanner.nextInt();
+            System.out.print("Enter the size of Memory Frame <Max 10>: ");
+            int frameSize = scanner.nextInt();
 
-        int choice = 0;
-        while (choice != 4) {
-            System.out.println("\nAlgorithm Option Menu:");
-            System.out.println("====================");
-            System.out.println("1. OPTIMAL");
-            System.out.println("2. LRU");
-            System.out.println("3. FIFO");
-            System.out.println("4. Exit simulation");
-            System.out.print("\nSelect an OPTION from above by entering its number: ");
+            boolean sameString = true;
+            while (sameString) {
+                printMenu();
+                int choice = scanner.nextInt();
 
-            choice = scanner.nextInt();
-
-            switch (choice) {
-                case 1:
-                    System.out.println("Running OPTIMAL simulation...");
-                    // Logic for OPTIMAL will go here
+                if (choice == 4) {
+                    running = false;
                     break;
-                case 2:
-                    System.out.println("Running LRU simulation...");
-                    // Logic for LRU will go here
+                }
+
+                runAlgorithm(choice, refString, frameSize);
+
+                System.out.print("\nEnter Y to continue or press any other key to Exit: ");
+                String cont = scanner.next();
+                if (!cont.equalsIgnoreCase("Y")) {
+                    running = false;
                     break;
-                case 3:
-                    System.out.println("Running FIFO simulation...");
-                    // Logic for FIFO will go here
-                    break;
-                case 4:
-                    System.out.println("Exiting simulation. Goodbye!");
-                    break;
-                default:
-                    System.out.println("Invalid option. Please try again.");
+                }
+
+                System.out.print("Use the same reference string? (Y/N): ");
+                String reuse = scanner.next();
+                if (!reuse.equalsIgnoreCase("Y")) {
+                    sameString = false;
+                }
             }
         }
+        System.out.println("Exiting simulation. Goodbye!");
         scanner.close();
+    }
+
+    private static void printMenu() {
+        System.out.println("\nAlgorithm Option Menu:");
+        System.out.println("====================");
+        System.out.println("1. OPTIMAL");
+        System.out.println("2. LRU");
+        System.out.println("3. FIFO");
+        System.out.println("4. Exit simulation");
+        System.out.print("\nSelect an OPTION from above by entering its number: ");
+    }
+
+    private static void runAlgorithm(int choice, String refStr, int size) {
+        // This will call your algorithm classes in the next step
+        switch (choice) {
+            case 1:
+                System.out.println("\nOPTIMAL PAGE REPLACEMENT ALGORITHM");
+                System.out.println("======================================");
+            break;
+            case 2:
+                System.out.println("\nLRU PAGE REPLACEMENT ALGORITHM");
+                System.out.println("=====================================");
+                break;
+            case 3:
+                System.out.println("\nFIFO PAGE REPLACEMENT ALGORITHM");
+                System.out.println("=====================================");
+                break;
+        }
+        System.out.println("Simulation output for " + refStr + " will appear here...");
     }
 }
