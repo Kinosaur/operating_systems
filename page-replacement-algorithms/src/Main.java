@@ -7,14 +7,25 @@ public class Main {
 
         while (running) {
             System.out.println("PAGE REPLACEMENT ALGORITHMS SIMULATION");
-            System.out.println("========================================");
+            System.out.println("==========================================");
 
             // 1. Get Inputs
             System.out.print("Enter a Page Reference string without space <Max 20>: ");
             String refString = scanner.next();
+            while (refString.length() > 20) {
+                System.out.println("Error: String length (" + refString.length() + ") exceeds maximum of 20.");
+                System.out.print("Please enter again: ");
+                refString = scanner.next();
+            }
 
+            // --- Validate Frame Size (Max 10) ---
             System.out.print("Enter the size of Memory Frame <Max 10>: ");
             int frameSize = scanner.nextInt();
+            while (frameSize > 10 || frameSize <= 0) {
+                System.out.println("Error: Frame size must be between 1 and 10.");
+                System.out.print("Please enter again: ");
+                frameSize = scanner.nextInt();
+            }
 
             boolean sameString = true;
             while (sameString) {
@@ -57,21 +68,30 @@ public class Main {
     }
 
     private static void runAlgorithm(int choice, String refStr, int size) {
-        // This will call your algorithm classes in the next step
+        ReplacementAlgorithm algorithm = null;
+        String algoName = "";
+
         switch (choice) {
             case 1:
-                System.out.println("\nOPTIMAL PAGE REPLACEMENT ALGORITHM");
-                System.out.println("======================================");
-            break;
+                algoName = "OPTIMAL ALGORITHM";
+                algorithm = new OptimalAlgorithm(); // Strategy selected
+                break;
             case 2:
-                System.out.println("\nLRU PAGE REPLACEMENT ALGORITHM");
-                System.out.println("=====================================");
+                // algoName = "LRU ALGORITHM";
+                // algorithm = new LRUAlgorithm();
                 break;
             case 3:
-                System.out.println("\nFIFO PAGE REPLACEMENT ALGORITHM");
-                System.out.println("=====================================");
+                // algoName = "FIFO ALGORITHM";
+                // algorithm = new FIFOAlgorithm();
                 break;
         }
-        System.out.println("Simulation output for " + refStr + " will appear here...");
+
+        if (algorithm != null) {
+            System.out.println("\n" + algoName);
+            System.out.println("======================================");
+            SimulationEngine.simulate(refStr, size, algorithm, algoName);
+        } else {
+            System.out.println("Algorithm not implemented yet.");
+        }
     }
 }
