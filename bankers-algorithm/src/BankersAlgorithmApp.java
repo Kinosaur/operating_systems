@@ -2,7 +2,7 @@ import java.util.Scanner;
 
 public class BankersAlgorithmApp {
 
-    static final String INPUT_FILENAME = "input1.txt";
+    static final String INPUT_FILENAME = "input2.txt";
 
     public static void main(String[] args) {
         Scanner console = new Scanner(System.in);

@@ -77,12 +77,12 @@ public class Main {
                 algorithm = new OptimalAlgorithm(); // Strategy selected
                 break;
             case 2:
-                // algoName = "LRU ALGORITHM";
-                // algorithm = new LRUAlgorithm();
+                algoName = "LRU ALGORITHM";
+                algorithm = new LRUAlgorithm();
                 break;
             case 3:
-                // algoName = "FIFO ALGORITHM";
-                // algorithm = new FIFOAlgorithm();
+                algoName = "FIFO ALGORITHM";
+                algorithm = new FIFOAlgorithm();
                 break;
         }
 

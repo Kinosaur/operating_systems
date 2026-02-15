@@ -10,64 +10,55 @@ This program demonstrates **Demand Paging** by visualizing how logical pages are
 Virtual Memory allows processes to execute even if they are not completely loaded into physical memory.  
 When a program references a page that is not currently in memory, a **page fault** occurs, and the Operating System must decide which existing page should be replaced.
 
-This simulator is designed to study and compare the behavior of classic page replacement algorithms through a step-by-step execution model.
+This simulator studies and compares the behavior of three classic page replacement algorithms:
 
-The following algorithms are supported or planned:
+1.  **Optimal Page Replacement** (Implemented)  
+    Replaces the page that will not be used for the longest period of time in the future. This algorithm provides the theoretical minimum number of page faults but is difficult to implement in real systems requiring future knowledge.
 
-1. **Optimal Page Replacement** (In Progress)  
-   Replaces the page that will not be used for the longest period of time in the future.  
-   This algorithm provides the theoretical minimum number of page faults.
+2.  **LRU (Least Recently Used)** (Implemented)  
+    Replaces the page that has not been used for the longest time in the past. This is a popular approximation of the Optimal algorithm.
 
-2. **LRU (Least Recently Used)** (Planned)  
-   Replaces the page that has not been used for the longest time in the past.
-
-3. **FIFO (First-In-First-Out)** (Planned)  
-   Replaces the page that has been in memory the longest.
+3.  **FIFO (First-In-First-Out)** (Implemented)  
+    Replaces the page that has been in memory the longest, treating memory like a circular buffer.
 
 ---
 
 ## 🚀 Features
 
-- **Step-by-Step Visualization**  
-  Displays the state of each memory frame after every page reference using the format:  
-  `index[ page ]`
-
-- **Page Fault Tracking**  
-  Clearly identifies page faults and shows which page is replaced.
-
-- **Configurable Inputs**
-  - Page reference string (maximum 20 characters)
-  - Memory frame size (maximum 10 frames)
-
-- **Object-Oriented Design**
-  - Clear separation between user interface, simulation engine, memory model, and algorithm logic
-  - Architecture designed for easy extension with new replacement algorithms
+* **Step-by-Step Visualization**: Displays the state of each memory frame after every page reference using the format `index[ page ]`.
+* **Page Fault Tracking**: Clearly identifies page faults and shows exactly which "victim" page is replaced.
+* **Robust Input Validation**:
+    * Page reference string (Max 20 characters).
+    * Memory frame size (Max 10 frames).
+* **Interactive Menu**: Allows users to run multiple simulations back-to-back using the same or different reference strings.
 
 ---
 
 ## 📂 Project Structure
 
-| File | Description |
-|------|------------|
-| **`Main.java`** | Handles user input, menu display, and overall program flow. |
-| **`SimulationEngine.java`** | Controls the simulation loop, detects page faults, and delegates victim selection to the selected algorithm. |
-| **`MemoryFrame.java`** | Represents physical memory frames and displays their state. |
-| **(Planned) Algorithm Classes** | Each replacement policy will be implemented as a separate module. |
+| File | Responsibility |
+| :--- | :--- |
+| **`Main.java`** | The entry point. Handles user inputs, validation, and the simulation menu loop. |
+| **`SimulationEngine.java`** | The "Conductor." Manages the demand paging loop, detects page faults, and delegates the victim selection to the chosen algorithm strategy. |
+| **`MemoryFrame.java`** | Represents Physical Memory. It is a "dumb" container that holds pages and displays its state. |
+| **`ReplacementAlgorithm.java`** | An Interface defining the contract for all algorithms (`findVictim`). |
+| **`OptimalAlgorithm.java`** | Implements the **Optimal** strategy by "looking ahead" into the future reference string. |
+| **`LRUAlgorithm.java`** | Implements the **LRU** strategy by "looking backward" to find the least recently used page. |
+| **`FIFOAlgorithm.java`** | Implements the **FIFO** strategy using a circular pointer to track the oldest page. |
 
 ---
 
 ## 🛠️ How to Run
 
 ### Prerequisites
-- Java Development Kit (JDK) installed
+* Java Development Kit (JDK) installed.
 
 ### Compilation
-
-Open a terminal in the project directory and compile:
-
+Open a terminal in the project directory and compile all files:
 ```bash
 javac *.java
-````
+
+```
 
 ### Execution
 
@@ -75,6 +66,7 @@ Run the program:
 
 ```bash
 java Main
+
 ```
 
 ---
@@ -88,49 +80,55 @@ PAGE REPLACEMENT ALGORITHMS SIMULATION
 ========================================
 Enter a Page Reference string without space <Max 20>: 232152453252
 Enter the size of Memory Frame <Max 10>: 3
+
 ```
 
-### 2. Simulation Phase
+### 2. Selection Phase
 
 ```text
+Algorithm Option Menu:
+====================
+1. OPTIMAL
+2. LRU
+3. FIFO
+4. Exit simulation
+
+Select an OPTION from above by entering its number: 2
+
+```
+
+### 3. Simulation Output (LRU Example)
+
+```text
+LRU PAGE REPLACEMENT ALGORITHM
+=====================================
+
 Reference string: 2
 0[ 2 ]
 1[   ]
 2[   ]
-
+...
 Reference string: 5
 => Page Fault!
-Replace 1 with 5
+Replace 3 with 5
 0[ 2 ]
 1[ 5 ]
-2[ 3 ]
+2[ 1 ]
+
+Total 4 Page Fault(s) generated by LRU ALGORITHM!
+
 ```
-
-### 3. Result Phase
-
-```text
-Total Page Fault(s) generated: 8
-```
-
-*(Page fault count depends on the selected algorithm.)*
 
 ---
 
 ## 🧠 Theory Background
 
-* **Demand Paging**
-  Pages are loaded into memory only when they are referenced during execution.
-
-* **Optimal Page Replacement**
-  Achieves the lowest possible page-fault rate but requires knowledge of future memory references, making it impractical for real operating systems.
-
-* **Victim Frame**
-  The memory frame selected by the replacement algorithm to be evicted when a page fault occurs and memory is full.
+* **Demand Paging**: Pages are loaded into memory only when they are referenced during execution.
+* **Victim Frame**: The memory frame selected by the replacement algorithm to be evicted when a page fault occurs and memory is full.
+* **Thrashing**: A state where the system spends more time paging (swapping) than executing caused by having too few frames.
 
 ---
 
 ## 📚 Reference
 
-Based on concepts from
-**Operating System Concepts (10th Edition)**
-by Silberschatz, Galvin, and Gagne
+Based on concepts from **Operating System Concepts (10th Edition)** by Silberschatz, Galvin, and Gagne.
